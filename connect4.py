@@ -1,6 +1,7 @@
 import mcts
 import sys
 import random
+import time
 if sys.version_info < (3, 0):
     input = raw_input
 
@@ -203,7 +204,79 @@ def play():
         else:
             print 'You won!'
 
+def ai_vs_ai():
+        seconds = float(input("How many seconds do we get per move? "))
+        red_wins = 0
+        black_wins = 0
+        draws = 0
+        while True:
+            print "Current score: %d O, %d X, %d draw" % (red_wins, black_wins, draws)
+            sys.stdout.write('STARTING NEW GAME.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            time.sleep(.2)
+            print ''
+            board = ConnectFour(red, is_red=True)
+            print board
+            while not board.is_terminal():
+                # red
+                board.is_red = True
+                print "O is Thinking..."
+                red_move, red_iterations = mcts.best_move_time(board, seconds)
+                board = board.get_successor(red_move)
+                if board.is_terminal():
+                    break
+                print board
+                print "After %d iterations, O played column %d" % (red_iterations, red_move+1)
+
+                board.is_red = False
+                print "X is Thinking..."
+                black_move, black_iterations = mcts.best_move_time(board, seconds)
+                board = board.get_successor(black_move)
+                print board
+                print "After %d iterations, X played column %d" % (black_iterations, black_move+1)
+            print board
+            board.is_red=True
+            if board.is_won():
+                print 'O won!'
+                red_wins+=1
+                continue
+            board.is_red=False
+            if board.is_won():
+                print 'X won!'
+                black_wins+=1
+                continue
+            print 'Draw!'
+            draws += 1
+
 if __name__ == '__main__':
     #test_board()
+    #ai_vs_ai()
     play()
 

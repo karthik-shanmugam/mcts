@@ -4,13 +4,16 @@ import random
 import time
 
 def best_move_iterations(state, iterations):
+    """returns the best move and time spent computing"""
     root = MonteCarloTreeNode(None, state)
+    start = time.time()
     for _ in range(iterations):
         child = root.select()
         child.propogate(child.simulate())
-    return root.play()
+    return root.play(), time.time() - start
 
 def best_move_time(state, seconds):
+    """returns the best move and number of mcts iterations computed"""
     start = time.time()
     root = MonteCarloTreeNode(None, state)
     iterations = 0
@@ -60,10 +63,10 @@ class MonteCarloTreeNode(object):
         if self.parent is not None:
             self.parent.propogate(won)
 
-    # TODO: optimazation
     def play(self):
         for move in self.children:
-            print '%d: %02.2f%%' % (move+1, 100*self.children[move].playouts / self.playouts)
+            print '%d:    %5.2f%%    %4d/%d' % (move+1, 100*self.children[move].playouts / self.playouts, self.children[move].wins, self.children[move].playouts)
+        print "        %4d/%d total" % (self.wins, self.playouts)
         return sorted(
             sorted(self.children.items(), key=lambda (action, child): child.wins), 
             key=lambda (action, child): child.playouts)[-1][0]
